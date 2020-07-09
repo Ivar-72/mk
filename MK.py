@@ -12,9 +12,9 @@ TIMEZONE_COMMON_NAME = config.TIMEZONE_COMMON_NAME
 bot = telebot.TeleBot(config.TOKEN)
 
 
-
 @bot.message_handler(commands=['Начать'])
 def start_command(message):
+    print(message.chat.id)
     bot.send_message(
         message.chat.id,
         'Готов узнать кто ты из шиноби мира МК?.\n'
@@ -84,12 +84,29 @@ def exchange_command(message):
 def iq_callback(query):
     data = query.data
     if data.startswith('Si'):
-        print(data)
-        bot.answer_inline_query(
-            inline_query.id,
-            get_iq_articles(pb.get_exchanges(inline_query.query))
+        bot.send_message(
+            496732538,
+            'Ваш любимый цвет?'
         )
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('Красный', callback_data='Красный'),
+            telebot.types.InlineKeyboardButton('Серый', callback_data='Серый'),
+            telebot.types.InlineKeyboardButton('Желтый', callback_data='Желтый'),
+            telebot.types.InlineKeyboardButton('Cиний', callback_data='Cиний'),
+        )
+        keyboard.row(
+            telebot.types.InlineKeyboardButton('Зеленый', callback_data='Зеленый'),
+            telebot.types.InlineKeyboardButton('Фиолетовый', callback_data='Фиолетовый'),
+            telebot.types.InlineKeyboardButton('Черный', callback_data='Черный'),
+            telebot.types.InlineKeyboardButton('Коричневый', callback_data='Коричневый'),
 
+        )
+        bot.send_message(
+            496732538,
+            'Сделайте свой выбор:',
+            reply_markup=keyboard
+        )
 
 def get_ex_callback(query):
     bot.answer_callback_query(query.id)
@@ -100,7 +117,7 @@ def send_exchange_result(message, ex_code):
     bot.send_chat_action(message.chat.id, 'typing')
     # ex = pb.get_exchange(ex_code)
     bot.send_message(
-        message.chat.id,
+        chaytID,
         reply_markup=get_update_keyboard(ex),
         parse_mode='HTML'
     )
